@@ -193,4 +193,12 @@ const updateProfile = AsyncHandler(async (req, res) => {
     );
 
 });
-export {userSignUp,userLogin,userLogout,refreshAccessToken,updateProfile}
+const checkAuth = AsyncHandler(async (req, res) => {
+    try {
+        return res.status(200)
+        .json(new ApiResponse(200, req.user, "User authenticated"));
+    } catch (error) {
+        throw new ApiError(401, error.message || "Unauthorized");
+};
+})
+export {userSignUp,userLogin,userLogout,refreshAccessToken,updateProfile,checkAuth};

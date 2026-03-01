@@ -1,33 +1,38 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
-function App() {
-  const [count, setCount] = useState(0)
-
+import React, { use, useEffect } from 'react'
+import Navbar from './components/Navbar.jsx'
+import { Route, Routes } from 'react-router-dom'
+import HomePage from './pages/HomePage.jsx'
+import LoginPage from './pages/LoginPage.jsx'
+import SignUp from './pages/SignUpPage.jsx'
+import SettingsPage from './pages/SettingsPage.jsx'
+import ProfilePage from './pages/ProfilePage.jsx'
+import { axiosInstance } from './lib/axios.js'
+import { useAuthStore } from "./store/useAuthStore.js";
+import { Loader } from 'lucide-react'
+const App = () => {
+  const {authUser, checkAuth,isCheckingAuth} = useAuthStore();
+  useEffect(()=>{
+    checkAuth();
+  },[checkAuth])
+  console.log(authUser);
+  if(isCheckingAuth && !authUser)
+    return (
+      <div className='flex items-center justify-center h-screen'>
+        <Loader className='animate-spin' size={48} />
+      </div>
+    ) 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+    <div>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
+      </Routes>
+    </div>
     </>
   )
 }

@@ -22,6 +22,6 @@ app.use(cookieParser());
 
 
 
-app.use("/api/v1/user", userRouter);
+app.use("/api/v1/users", userRouter);
 app.use("/api/v1/message", messageRoute);
 export {app};

@@ -43,6 +43,26 @@ const getMessagesByUserId = AsyncHandler(async(req,res)=>{
     }
 })
 const postMessage = AsyncHandler(async(req,res)=>{
-    const {text,image}
+    const {text,image} = req.body
+    const receiverId = req.params.id
+    const myId = req.user._id
+    if(!myId){
+        throw new ApiError(400,"user mot verified")
+    }
+    let imageURL
+    if (req.file?.path) {
+            const uploadedAvatar = await upLoadonCloudinary(req.file.path);
+            imageURL = uploadedAvatar?.url;
+    }
+
+    const newMessage = new Message({
+        senderID:myId,
+        receiverID:receiverId,
+        text:text,
+        image:imageURL
+    })
+    await newMessage.save({validateBefareSave:false})
+    //todo -- real time functionality goes here
+
 })
 export {userLeftBar,getMessagesByUserId,postMessage}
